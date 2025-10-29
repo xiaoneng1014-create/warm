@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击触发温馨提示彩蛋</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
+        }
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            background: #ff1493;
+        }
+        .tip-box {
+            position: absolute;
+            width: 240px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 9999;
+            pointer-events: none;
+            animation: float 4s ease-in-out forwards;
+        }
+        @keyframes float {
+            0% { opacity: 0; transform: translateY(20px) scale(0.8); }
+            15% { opacity: 1; transform: translateY(0) scale(1); }
+            85% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-30px) scale(0.8); }
+        }
+    </style>
+</head>
+<body>
+    <h1>点我有惊喜！</h1>
+    <button class="btn" onclick="showWarmTips()">点击触发温馨提示雨</button>
+    <div id="tips-container"></div>
+
+    <script>
+        // 每个祝福语前面都加上 “杨sir ”
+        const tips = [
+            '杨sir 多喝水哦~',
+            '杨sir 保持微笑呀',
+            '杨sir 每天都要元气满满',
+            '杨sir 记得吃水果',
+            '杨sir 保持好心情',
+            '杨sir 好好爱自己',
+            '杨sir 我想你了',
+            '杨sir 梦想成真',
+            '杨sir 期待下一次见面',
+            '杨sir 金榜题名',
+            '杨sir 顺顺利利',
+            '杨sir 早点休息',
+            '杨sir 愿所有烦恼都消失',
+            '杨sir 别熬夜',
+            '杨sir 今天过得开心嘛',
+            '杨sir 天冷了，多穿衣服'
+        ];
+
+        const colors = [
+            'lightpink', 'skyblue', 'lightgreen', 'lavender', 'lightyellow',
+            'plum', 'coral', 'bisque', 'aquamarine', 'mistyrose',
+            'honeydew', 'lavenderblush', 'oldlace'
+        ];
+
+        function getRandomTip() {
+            return tips[Math.floor(Math.random() * tips.length)];
+        }
+
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function getRandomPosition() {
+            const maxX = window.innerWidth - 260;
+            const maxY = window.innerHeight - 80;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            return { x, y };
+        }
+
+        function createTip() {
+            const tip = getRandomTip();
+            const color = getRandomColor();
+            const pos = getRandomPosition();
+
+            const div = document.createElement('div');
+            div.className = 'tip-box';
+            div.textContent = tip;
+            div.style.backgroundColor = color;
+            div.style.left = pos.x + 'px';
+            div.style.top = pos.y + 'px';
+
+            document.getElementById('tips-container').appendChild(div);
+
+            // 4秒后自动移除
+            setTimeout(() => {
+                div.remove();
+            }, 4000);
+        }
+
+        function showWarmTips() {
+            const count = 300;
+            let spawned = 0;
+
+            // 关键：速度从 5ms → 20ms（变慢 4 倍）
+            const interval = setInterval(() => {
+                if (spawned >= count) {
+                    clearInterval(interval);
+                    return;
+                }
+                createTip();
+                spawned++;
+            }, 20); // 每 20ms 弹出一个，节奏更舒缓
+        }
+    </script>
+</body>
+</html>
